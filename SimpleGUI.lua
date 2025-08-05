@@ -1,124 +1,90 @@
--- Простой красивый GUI для Roblox, работает в Solara
--- Автор: MakaroshkaLove
+-- Минималистичный open source GUI для Roblox (работает в Solara)
+-- Стиль и структура взяты из популярных публичных GUI
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Удаляем старый GUI если есть
-if playerGui:FindFirstChild("ChilliSimpleGUI") then
-    playerGui.ChilliSimpleGUI:Destroy()
+-- Удаляем старый GUI
+if playerGui:FindFirstChild("OpenSourceSimpleGUI") then
+    playerGui.OpenSourceSimpleGUI:Destroy()
 end
 
--- Основной экран
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "ChilliSimpleGUI"
-screenGui.Parent = playerGui
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "OpenSourceSimpleGUI"
+gui.Parent = playerGui
 
--- Кнопка открытия GUI
-local openButton = Instance.new("TextButton")
-openButton.Name = "OpenButton"
-openButton.Size = UDim2.new(0, 50, 0, 50)
-openButton.Position = UDim2.new(0, 20, 0, 20)
-openButton.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
-openButton.Text = "☰"
-openButton.TextColor3 = Color3.fromRGB(255,255,255)
-openButton.TextScaled = true
-openButton.Font = Enum.Font.GothamBold
-openButton.Parent = screenGui
+-- Кнопка открытия
+local openBtn = Instance.new("TextButton")
+openBtn.Size = UDim2.new(0, 40, 0, 40)
+openBtn.Position = UDim2.new(0, 20, 0, 20)
+openBtn.BackgroundColor3 = Color3.fromRGB(80, 170, 255)
+openBtn.Text = "☰"
+openBtn.TextColor3 = Color3.new(1,1,1)
+openBtn.TextScaled = true
+openBtn.Font = Enum.Font.GothamBold
+openBtn.Parent = gui
 
-local openCorner = Instance.new("UICorner")
-openCorner.CornerRadius = UDim.new(0, 12)
-openCorner.Parent = openButton
-
--- Основной фрейм GUI
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 350)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -175)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-mainFrame.BorderSizePixel = 0
-mainFrame.Visible = false
-mainFrame.Parent = screenGui
-
-local mainCorner = Instance.new("UICorner")
-mainCorner.CornerRadius = UDim.new(0, 16)
-mainCorner.Parent = mainFrame
+-- Главное окно
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 300, 0, 220)
+main.Position = UDim2.new(0.5, -150, 0.5, -110)
+main.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+main.Visible = false
+main.Parent = gui
 
 -- Заголовок
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 50)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-title.BorderSizePixel = 0
-title.Text = "Chilli Hub GUI"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+title.Text = "Open Source GUI"
+title.TextColor3 = Color3.new(1,1,1)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
-title.Parent = mainFrame
-
-local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0, 16)
-titleCorner.Parent = title
+title.Parent = main
 
 -- Кнопка закрытия
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -40, 0, 10)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
 closeBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-closeBtn.BorderSizePixel = 0
 closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.TextColor3 = Color3.new(1,1,1)
 closeBtn.TextScaled = true
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.Parent = title
+closeBtn.Parent = main
 
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 8)
-closeCorner.Parent = closeBtn
-
--- Пример кнопок внутри GUI
-local function createBtn(text, color, posY)
+-- Пример кнопок
+local function addButton(text, posY, callback)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.8, 0, 0, 40)
+    btn.Size = UDim2.new(0.8, 0, 0, 36)
     btn.Position = UDim2.new(0.1, 0, 0, posY)
-    btn.BackgroundColor3 = color
-    btn.BorderSizePixel = 0
+    btn.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
     btn.Text = text
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextColor3 = Color3.new(1,1,1)
     btn.TextScaled = true
     btn.Font = Enum.Font.GothamSemibold
-    btn.Parent = mainFrame
-    
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 8)
-    btnCorner.Parent = btn
-    
-    btn.MouseEnter:Connect(function()
-        btn.BackgroundColor3 = color:Lerp(Color3.fromRGB(255,255,255), 0.1)
-    end)
-    btn.MouseLeave:Connect(function()
-        btn.BackgroundColor3 = color
-    end)
+    btn.Parent = main
+    btn.MouseButton1Click:Connect(callback)
     return btn
 end
 
-local btn1 = createBtn("Stealer", Color3.fromRGB(100, 150, 255), 70)
-local btn2 = createBtn("Helper", Color3.fromRGB(255, 150, 100), 120)
-local btn3 = createBtn("Player", Color3.fromRGB(150, 255, 100), 170)
-local btn4 = createBtn("Finder", Color3.fromRGB(255, 255, 100), 220)
-local btn5 = createBtn("Server", Color3.fromRGB(200, 100, 255), 270)
-local btn6 = createBtn("Discord!", Color3.fromRGB(100, 255, 255), 320)
-
--- Функционал открытия/закрытия GUI
-openButton.MouseButton1Click:Connect(function()
-    mainFrame.Visible = true
-    openButton.Visible = false
+addButton("Пример 1", 60, function()
+    title.Text = "Нажата кнопка 1"
+end)
+addButton("Пример 2", 110, function()
+    title.Text = "Нажата кнопка 2"
+end)
+addButton("Пример 3", 160, function()
+    title.Text = "Нажата кнопка 3"
 end)
 
+-- Открытие/закрытие GUI
+openBtn.MouseButton1Click:Connect(function()
+    main.Visible = true
+    openBtn.Visible = false
+end)
 closeBtn.MouseButton1Click:Connect(function()
-    mainFrame.Visible = false
-    openButton.Visible = true
+    main.Visible = false
+    openBtn.Visible = true
 end)
-
--- GUI готов к использованию!
